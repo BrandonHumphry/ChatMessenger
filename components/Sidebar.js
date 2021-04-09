@@ -10,13 +10,12 @@ function Sidebar() {
     const input = prompt(
       "Please enter an email address for the user you wish to chat with"
     );
+    if (!input) return null;
+
+    if (EmailValidator.validate(input)) {
+      //  add chat into db 'chats' collection
+    }
   };
-  if (!input) return null;
-
-  if (EmailValidator.validate(input)) {
-    //  add chat into db 'chats' collection
-  }
-
   return (
     <Container>
       <Header>
