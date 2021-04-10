@@ -11,11 +11,14 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     if (user) {
-      db.collection("users").doc(user.uid).set({
-        email: user.email,
-        lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
-        photoURL: user.photoURL
-      });
+      db.collection("users").doc(user.uid).set(
+        {
+          email: user.email,
+          lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+          photoURL: user.photoURL
+        },
+        { merge: true }
+      );
     }
   }, [user]);
 
