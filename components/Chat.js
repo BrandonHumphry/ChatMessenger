@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Avatar } from "@material-ui/core";
 
-function Chat() {
+function Chat({ id, users }) {
   return (
     <Container>
       <UserAvatar />
