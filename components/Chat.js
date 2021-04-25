@@ -6,15 +6,26 @@ import { auth } from "../firebase";
 
 function Chat({ id, users }) {
   console.log(id, users);
+
   const [user] = useAuthState(auth);
+  const [recipientSnapshot] = useCollection(
+    db.collection("users").where("email", "==", getRecipientEmail(users, user))
+  );
+  const recipient = recipientSnapshot?docs?.[0]?.data();
+
   const recipientEmail = getRecipientEmail(users, user);
   console.log(recipientEmail);
   return (
     <Container>
-      <UserAvatar />
+      {recipient ? (
+        <UserAvatar src={recipient?.photoURL}/>
+      ):(
+        <UserAvatar src={recipientEmail[0]}/>
+      )}
       <p>{recipientEmail}</p>
     </Container>
   );
+
 }
 
 export default Chat;
