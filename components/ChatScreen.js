@@ -6,6 +6,7 @@ import { Avatar, IconButton } from "@material-ui/core";
 import { MoreVertIcon } from "@material-ui/icons/MoreVert";
 import { AttachFileIcon } from "@material-ui/icons/AttachFile";
 import { useCollection } from "react-firebase-hooks";
+import { InsertEmoticonOutlined } from "@material-ui/icons";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
@@ -47,6 +48,11 @@ function ChatScreen({ chat, messages }) {
         {showMessages()}
         <EndOfMessage />
       </MessageContainer>
+      <InputContainer>
+        <InsertEmoticonIcon />
+        <Input />
+        <MicIcon />
+      </InputContainer>
     </Container>
   );
 }
@@ -54,6 +60,26 @@ function ChatScreen({ chat, messages }) {
 export default ChatScreen;
 
 const Container = styled.div``;
+
+const Input = styled.div`
+  flex: 1;
+  outline: 0;
+  border: none;
+  border-radius: 10px;
+  background-color: whitesmoke;
+  padding: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+`;
+const InputContainer = styled.form`
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  z-index: 100;
+`;
 
 const Header = styled.div`
   position: sticky;
