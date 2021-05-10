@@ -6,11 +6,16 @@ import { Avatar, IconButton } from "@material-ui/core";
 import { MoreVertIcon } from "@material-ui/icons/MoreVert";
 import { AttachFileIcon } from "@material-ui/icons/AttachFile";
 import { useCollection } from "react-firebase-hooks";
-import { InsertEmoticonOutlined } from "@material-ui/icons";
+import InsertEmoticonIcon, { SettingsInputAntenna } from "@material-ui/icons";
+import MicIcon from "@material-ui/icons/Mic";
+import Message from "./Message";
+import firebase from "firebase";
 
 function ChatScreen({ chat, messages }) {
   const [user] = useAuthState(auth);
+  const [input, useInput] = useState("");
   const router = useRouter();
+
   const [messagesSnapshot] = useCollection(
     db
       .collection("chats")
@@ -34,6 +39,25 @@ function ChatScreen({ chat, messages }) {
     }
   };
 
+  const sendMessage = e => {
+    e.preventDefault();
+
+    db.collection("users").doc(user.uid).set(
+      {
+        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+      },
+      { merge: true }
+    );
+
+    db.collection("chats").doc(router.query.id).collection("messages").add({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input,
+      user: user.email,
+      photoURL: user.photoURL
+    });
+    setInput("");
+  };
+
   return (
     <Container>
       <Header>
@@ -50,7 +74,10 @@ function ChatScreen({ chat, messages }) {
       </MessageContainer>
       <InputContainer>
         <InsertEmoticonIcon />
-        <Input />
+        <Input value={input} onChange={e => setInput(e.target.value)} />
+        <button hidden disabled={!input} type="submit" onclick={sendMessage}>
+          Send Message
+        </button>
         <MicIcon />
       </InputContainer>
     </Container>
@@ -59,7 +86,20 @@ function ChatScreen({ chat, messages }) {
 
 export default ChatScreen;
 
-const Container = styled.div``;
+const Container = styled.div`
+  height: 100vh;
+  border-right: 1px solid whitesmoke;
+  min-width: 300px;
+  max-width: 350px;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+`;
 
 const Input = styled.div`
   flex: 1;
@@ -111,4 +151,8 @@ const HeaderIcons = styled.div``;
 
 const EndOfMessage = styled.div``;
 
-const MessageContainer = styled.div``;
+const MessageContainer = styled.div`
+  padding: 30px;
+  background-color: #e5e5e5;
+  min-height: 90vh;
+`;
